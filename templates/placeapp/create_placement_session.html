@@ -1,0 +1,68 @@
+{% extends 'placeapp/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Create Placement Session</h2>
+
+    <div class="card shadow-lg" style="max-width: 600px; margin: auto; display: none;" id="session-form">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group mb-3">
+                    <label for="id_session_name">Session Name</label>
+                    {{ form.session_name }}
+                </div>
+
+                <!-- Hidden Company and Recruiter Fields -->
+                <div class="form-group mb-3" style="display: none;">
+                    <label for="id_company">Company</label>
+                    {{ form.company }}
+                </div>
+
+                <div class="form-group mb-3" style="display: none;">
+                    <label for="id_recruiter">Recruiter</label>
+                    {{ form.recruiter }}
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="id_date">Date</label>
+                    {{ form.date }}
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="id_session_end">Session End</label>
+                    {{ form.session_end }}
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="id_mode">Mode</label>
+                    {{ form.mode }}
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="id_location">Location</label>
+                    {{ form.location }}
+                </div>
+
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary">Create Session</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Animation Script -->
+<script>
+    window.onload = function() {
+        var form = document.getElementById('session-form');
+        form.style.display = 'block';
+        form.classList.add('animate__animated', 'animate__zoomIn');
+    };
+</script>
+
+<!-- Add animation library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+{% endblock %}

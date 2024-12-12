@@ -1,0 +1,31 @@
+{% extends 'placeapp/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Placement Sessions</h2>
+    <div class="row">
+        {% for session in placement_sessions %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ session.session_name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ session.company.name }}</h6>
+                    <p class="card-text">
+                        <strong>Date:</strong> {{ session.date }}<br>
+                        <strong>Location:</strong> {{ session.location }}
+                    </p>
+                    {% if is_recruiter %}
+                        <div class="text-right mb-3">
+                            <a href="{% url 'create_job_opening' session.id %}" class="btn btn-success">Create Job</a>
+
+                        </div>
+                    {% endif %}
+
+                    <a href="{% url 'view_jobs' session.id %}" class="btn btn-secondary mt-2">View Jobs</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

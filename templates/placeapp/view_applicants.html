@@ -1,0 +1,81 @@
+{% extends 'placeapp/base.html' %}
+<head>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="csrf-token" content="your-csrf-token-value">
+
+</head>
+{% block content %}
+<ul class="list-group">
+    {% for application in applications %}
+        <li class="list-group-item">
+            <h5>{{ application.name }}</h5>
+            <p><strong>Email:</strong> {{ application.email }}</p>
+            <p><strong>Phone:</strong> {{ application.phone }}</p>
+            <p><strong>Cover Letter:</strong> {{ application.cover_letter }}</p>
+            <a href="{{ application.resume.url }}" class="btn btn-primary">Download Resume</a>
+            
+
+            <button 
+                id="shortlisted-{{ application.id }}"
+                class="btn {% if application.shortlisted %}btn-success{% else %}btn-outline-success{% endif %} mt-2" 
+                data-id="{{ application.id }}"
+                onclick="toggleStatus(this, 'shortlisted')">
+                {% if application.shortlisted %}Shortlisted{% else %}Mark as Shortlisted{% endif %}
+            </button>
+
+            <button 
+                id="contacted-{{ application.id }}"
+                class="btn {% if application.contacted %}btn-info{% else %}btn-outline-info{% endif %} mt-2" 
+                data-id="{{ application.id }}"
+                onclick="toggleStatus(this, 'contacted')">
+                {% if application.contacted %}Contacted{% else %}Mark as Contacted{% endif %}
+            </button>
+        </li>
+    {% empty %}
+        <li class="list-group-item">No applicants have applied for this job yet.</li>
+    {% endfor %}
+</ul>
+
+<script>
+    function getCSRFToken() {
+        return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    }
+    
+    function toggleStatus(buttonElement, statusType) {
+        const applicationId = buttonElement.getAttribute("data-id");
+        const url = `/application/${applicationId}/toggle-${statusType}/`;
+    
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCSRFToken(),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                // Update button UI dynamically instead of reloading
+                if (statusType === 'shortlisted') {
+                    buttonElement.classList.toggle('btn-success');
+                    buttonElement.classList.toggle('btn-outline-success');
+                    buttonElement.innerText = data.shortlisted ? 'Shortlisted' : 'Mark as Shortlisted';
+                } else if (statusType === 'contacted') {
+                    buttonElement.classList.toggle('btn-info');
+                    buttonElement.classList.toggle('btn-outline-info');
+                    buttonElement.innerText = data.contacted ? 'Contacted' : 'Mark as Contacted';
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred: ' + error.message);
+        });
+    }
+    
+    
+</script>
+{% endblock %}

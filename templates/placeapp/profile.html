@@ -1,0 +1,47 @@
+{% extends 'placeapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Profile</h1>
+    
+    <div class="card shadow-sm animated fadeIn" style="max-width: 600px; margin: auto;">
+        <div class="card-body text-center">
+            <!-- Profile Picture -->
+            <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'profile_pictures/default.png' %}{% endif %}" 
+                 alt="Profile Picture" class="rounded-circle mb-4" style="width: 150px; height: 150px; object-fit: cover;">
+            
+            <!-- User Information -->
+            <h3 class="card-title">{{ user.name }}</h3>
+            <p class="card-text"><strong>Username:</strong> {{ user.username }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+            <p class="card-text"><strong>Phone:</strong> {{ user.phone }}</p>
+            <p class="card-text"><strong>Date of Birth:</strong> {{ user.dob }}</p>
+            
+            <!-- Logout Button -->
+            <a href="{% url 'logout' %}" class="btn btn-danger mt-4">Logout</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_styles %}
+<style>
+    /* CSS Animation */
+    .fadeIn {
+        animation: fadeInAnimation 1s ease-in-out;
+    }
+
+    @keyframes fadeInAnimation {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}
